@@ -1,0 +1,12 @@
+.reveal h1 {
+  font-size: 2em;
+}
+
+.reveal section img {
+  border: 0 !important;
+  background-color: white;
+}
+
+.reveal ol li p {
+  font-size: 0.8em;
+}

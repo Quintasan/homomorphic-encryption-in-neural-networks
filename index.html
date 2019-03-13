@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Michał Zając">
+  <title>Szyfrowanie homomorficzne w sieciach neuronowych</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="./reveal.js/css/reveal.css">
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <link rel="stylesheet" href="./reveal.js/css/theme/black.css" id="theme">
+  <link rel="stylesheet" href="custom.css"/>
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? './reveal.js/css/print/pdf.css' : './reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="./reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Szyfrowanie homomorficzne w sieciach neuronowych</h1>
+  <p class="author">Michał Zając</p>
+</section>
+
+<section><section id="zanim-zaczniemy" class="title-slide slide level1"><h1>Zanim zaczniemy</h1></section><section id="w-prezentacji-pojawią-się-znaczące-uproszczenia" class="slide level2">
+<h2>W prezentacji pojawią się znaczące uproszczenia</h2>
+</section></section>
+<section><section id="wprowadzenie" class="title-slide slide level1"><h1>Wprowadzenie</h1></section><section id="szyfrowanie-homomorficzne" class="slide level2">
+<h2>Szyfrowanie homomorficzne?</h2>
+<p><img data-src="images/szyfrowanie.svg" alt="Jak działa szyfrowanie homomorficzne" class="stretch" /> </p>
+</section><section id="co-należy-pamiętać" class="slide level2">
+<h2>Co należy pamiętać</h2>
+<p>Szyfrowanie homomorficzne pozwala na wykonywanie operacji na szyfrogramach bez konieczności ich deszyfracji.</p>
+</section><section id="sieci-neuronowe" class="slide level2">
+<h2>Sieci neuronowe</h2>
+<p><img data-src="images/neural_network.svg" alt="Sieć neuronowa" class="stretch" /> </p>
+</section><section id="praktyczna-sieć-neuronowa" class="slide level2">
+<h2>Praktyczna sieć neuronowa</h2>
+<p><img data-src="images/googlenet.png" alt="GoogLeNet" class="stretch" /> </p>
+<p>Źródło: <em>Going deeper with convolutions.</em></p>
+</section><section id="proces-uczenia-sieci-neuronowej" class="slide level2">
+<h2>Proces uczenia sieci neuronowej</h2>
+<p><img data-src="images/supervised_learning.svg" alt="Uczenie nadzorowane" class="stretch" /> </p>
+</section><section id="co-należy-pamiętać-1" class="slide level2">
+<h2>Co należy pamiętać?</h2>
+<p>W sieci neuronowej “wiedzę” sieci reprezentują <strong>wagi</strong> między połączeniami sieci.</p>
+</section></section>
+<section><section id="po-co" class="title-slide slide level1"><h1>Po co?</h1></section><section id="problem" class="slide level2">
+<h2>Problem</h2>
+<p>Dane potrzebne do wytrenowania sieci neuronowej często są trudno dostępne, np. dane medyczne pacjentów, giełda papierów wartościowych itp.</p>
+</section><section id="obecnie-znane-rozwiązania" class="slide level2">
+<h2>Obecnie znane rozwiązania</h2>
+<ol type="1">
+<li>Crypto-nets.</li>
+<li>Zaszyfrowanie sieci neuronowej.</li>
+</ol>
+</section><section id="crypto-nets" class="slide level2">
+<h2>Crypto-nets</h2>
+<blockquote>
+<p>This allows a data owner to send their data in an encrypted form to a cloud service that hosts the network. The encryption ensures that the data remains confidential since the cloud does not have access to the keys needed to decrypt it.</p>
+</blockquote>
+<p>Źródło: <em>Cryptonets: Applying neural networks to encrypted data with high throughput and accuracy</em></p>
+</section><section id="zalety" class="slide level2">
+<h2>Zalety</h2>
+<ol type="1">
+<li>Dane są w postaci zaszyfrowanej, co powoduje, że tylko właściciel ma do nich dostęp.</li>
+<li>Mamy całkowitą kontrolę nad naszą siecią neuronową.</li>
+</ol>
+</section><section id="wady" class="slide level2">
+<h2>Wady</h2>
+<ol type="1">
+<li>Dane nadal opuszczają swoje pierwotne miesjce - co prawda w postaci zaszyfrowanej.</li>
+<li>Sieć jest bezużyteczna dla osoby nieposiadającej klucza do zaszyfrowanych danych.</li>
+<li>Nie ma możliwości wyuczenia modelu z wielu różnych źródeł.</li>
+</ol>
+</section><section id="zaszyfrowanie-sieci-neuronowej" class="slide level2">
+<h2>Zaszyfrowanie sieci neuronowej</h2>
+<p>Tutaj postępujemy dokładnie odwrotnie – szyfrujemy wagi w sieci neuronowej.</p>
+</section><section id="problemy" class="slide level2">
+<h2>Problemy</h2>
+</section><section id="nieliniowa-funkcja-aktywacji" class="slide level2">
+<h2>Nieliniowa funkcja aktywacji</h2>
+<p>Nie wszystkie funkcje matematyczne są wspierane przez schematy homomorficzne.</p>
+<aside data-markdown class="notes">
+Większość schematów szyfrowania homomorficznego wspiera ograniczony zakres operacji takich jak dodawanie, odejmowanie, mnożenie czy dzielenie. Jednym z ważniejszych elementów sieci neuronowej jest funkcja aktywacji. Często jest to sigmoida, tangens hiperboliczny czy też funkcja wykładnicza. Co zrobić?
+</aside>
+</section><section id="wzór-taylora" class="slide level2">
+<h2>Wzór Taylora</h2>
+<p>Rozwinięcie funkcji w postać wielomianu z resztą w celu przybliżenia funkcji.</p>
+<aside data-markdown class="notes">
+Wzór Taylora pozwala nam na przybliżenie funkcji za pomocą wielomianu zależnego od jej kolejnych pochodnych oraz pewnej reszty. Rozwiązanie takie ma oczywiście wadę - musimy przeanalizować dane wejściowe i wyliczyć dostatecznie dobre przybliżenie. Ewentualnie możemy wyliczyć bardzo dużo wyrazów sumy i mieć nadzieję że nasze przybliżenie jest wystarczająco dobre dla danych wejściowych.
+</aside>
+</section><section id="szyfrowanie-danych" class="slide level2">
+<h2>Szyfrowanie danych</h2>
+<p>Dobór odpowiedniego schematu szyfrowania jest kluczowy.</p>
+<aside data-markdown class="notes">
+Badany algorytm – EHEIV – wspiera tylko liczby całkowite co stanowi oczywisty problem w przypadku gdy dane wejściowe są zmiennoprzecinkowe. Dane oczywiście możemy pomnożyć w celu pozbycia się części przecinkowej ale jest to dodatkowy koszt obliczeniowy.
+</aside>
+</section><section id="zalety-1" class="slide level2">
+<h2>Zalety</h2>
+<ol type="1">
+<li>Dane treningowe nie opuszczają komputera na którym się znajdują.</li>
+<li>Sieć możemy trenować na różnych zbiorach danych poprzez deszyfrowanie i zaszyfrowanie jej nową parą kluczy tyle razy ile jest to potrzebne.</li>
+<li>Z sieci może skorzystać każdy posiadający klucz publiczny ale wyjście z sieci jest możliwe do odszyfrowania tylko przez posiadacza klucza prywatnego.</li>
+</ol>
+</section><section id="wady-1" class="slide level2">
+<h2>Wady</h2>
+<ol type="1">
+<li>Testowana implementacja jest <strong>bardzo</strong> wolna.</li>
+<li>Wybrany schemat szyfrowania jest prosty ale nie wspiera liczb zmiennoprzecinkowych.</li>
+<li>Testowana sieć neuronowa jest bardzo prosta.</li>
+</ol>
+</section></section>
+<section><section id="podsumowanie" class="title-slide slide level1"><h1>Podsumowanie</h1></section><section id="czy-to-w-ogóle-działa" class="slide level2">
+<h2>Czy to w ogóle działa?</h2>
+<p>Tak, ale bardzo wolno w porównaniu do klasycznej sieci neuronowej (kilkanaście minut vs kilka godzin na trening).</p>
+</section><section id="po-co-1" class="slide level2">
+<h2>Po co?</h2>
+<ol type="1">
+<li>Swobodny dostęp do danych medycznych, rynkowych czy kryminalnych na potrzeby sztucznej inteligencji.</li>
+<li>Ochrona danych konsumentów.</li>
+<li>Kontrola nad “super sztuczną inteligencją”.</li>
+</ol>
+</section><section id="dalsze-możliwości-rozwoju" class="slide level2">
+<h2>Dalsze możliwości rozwoju</h2>
+<ol type="1">
+<li>Wybór innego schematu szyfrowania homomorficznego (Yet Another Somewhat Homomorphic Encryption wygląda na obiecującego kandydata).</li>
+<li>Zaprojektowanie specjalnego schematu szyfrowania homomorficznego do zastosowania w sieciach neuronowych.</li>
+<li><del>Zestaw narzędzi pozwalający na łatwe prowadzenie badań</del> https://github.com/OpenMined.</li>
+</ol>
+</section></section>
+<section><section id="źródła" class="title-slide slide level1"><h1>Źródła</h1></section><section id="section" class="slide level2">
+<h2></h2>
+<ol type="1">
+<li><p>https://iamtrask.github.io/2017/03/17/safe-ai/ (https://twitter.com/iamtrask)</p></li>
+<li><p>MICCIANCIO, Daniele. A first glimpse of cryptography’s Holy Grail. Communications of the ACM, 2010, 53.3: 96-96.</p></li>
+<li><p>SZEGEDY, Christian, et al. Going deeper with convolutions.</p></li>
+<li><p>XIE, Pengtao, et al. Crypto-nets: Neural networks over encrypted data. arXiv preprint arXiv:1412.6181, 2014.</p></li>
+</ol>
+</section><section id="section-1" class="slide level2">
+<h2></h2>
+<ol start="5" type="1">
+<li><p>GILAD-BACHRACH, Ran, et al. Cryptonets: Applying neural networks to encrypted data with high throughput and accuracy. In: International Conference on Machine Learning. 2016. p. 201-210.</p></li>
+<li><p>ZHOU, Hongchao; WORNELL, Gregory. Efficient homomorphic encryption on integer vectors and its applications. In: Information Theory and Applications Workshop (ITA), 2014. IEEE, 2014. p. 1-9.</p></li>
+<li><p>BOS, Joppe W., et al. Improved security for a ring-based fully homomorphic encryption scheme. In: IMA International Conference on Cryptography and Coding. Springer, Berlin, Heidelberg, 2013. p. 45-64.</p></li>
+</ol>
+</section></section>
+    </div>
+  </div>
+
+  <script src="./reveal.js/lib/js/head.min.js"></script>
+  <script src="./reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display a presentation progress bar
+        progress: false,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Enable slide navigation via mouse wheel
+        mouseWheel: true,
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: './reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: './reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: './reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
